@@ -32,34 +32,39 @@ Create a `docker-compose.yml` file in the root of the project with the following
 version: "3.8"
 
 services:
+  # MongoDB service
   mongo:
     container_name: mongo
     image: mongo
     ports:
-      - "27017:27017"
+      - "27017:27017"  # Expose MongoDB port
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: qwerty
     volumes:
-      - hostpath:/data/db
+      - hostpath:/data/db  # Persist database data
 
+  # Web UI for MongoDB
   mongo-express:
     image: mongo-express
     ports:
-      - "8081:8081"
+      - "8081:8081"  # Access UI at localhost:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: qwerty
       ME_CONFIG_MONGODB_URL: mongodb://admin:qwerty@mongo:27017/
+
+  # Your Node.js app
   testapp:
     container_name: testapp
     image: naimss0/testapp:1.2
     ports:
-      - "5050:5050"
+      - "5050:5050"  # Expose app port
     environment:
       - MONGO_URL=mongodb://admin:qwerty@mongo:27017
     depends_on:
-      - mongo
+      - mongo  # Start MongoDB first
+
 
 ```
 
@@ -112,20 +117,29 @@ The **Mongo Express dashboard** will appear.
 Create a new file named `Dockerfile` in the project root and paste the following:
 
 ```docker
+# Use a lightweight version of Node.js 18 as the base image
 FROM node:18-alpine
 
+# Set the working directory inside the container to /app
 WORKDIR /app
 
+# Define environment variables (you can access them in your code using process.env)
 ENV MONGO_DB_USERNAME=admin \
     MONGO_DB_PWD=qwerty
 
+# Copy package.json and package-lock.json (if it exists) to the working directory
 COPY package*.json ./
+
+# Install dependencies defined in package.json
 RUN npm install
 
+# Copy all remaining files from the host to the container
 COPY . .
 
+# Expose port 5050 so it can be accessed from outside the container
 EXPOSE 5050
 
+# Command to run the application when the container starts
 CMD ["node", "server.js"]
 
 ```
@@ -206,5 +220,5 @@ docker compose -f ./docker-compose.yml down
 | Service | Port | Default Credentials |
 | --- | --- | --- |
 | MongoDB | 27017 | admin / qwerty |
-| Mongo Express UI | 8081 | admin / qwerty |
-| Node.js App | 5050 | admin / pass |
+| Mongo Express UI | 8081 | admin / pass |
+| Node.js App | 5050 |  |
