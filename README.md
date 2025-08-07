@@ -17,8 +17,8 @@ Before starting, make sure you have the following installed:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/Cyber-Naimo/bank-app.git
-cd bank-app
+git clone https://github.com/Cyber-Naimo/my-bank.git
+cd my-bank
 
 ```
 
@@ -41,7 +41,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: qwerty
     volumes:
-      - C:\Users\MuhammadNaimatullahK\Downloads\Projects\docker-testapp\data:/data/db
+      - hostpath:/data/db
 
   mongo-express:
     image: mongo-express
@@ -51,6 +51,15 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: qwerty
       ME_CONFIG_MONGODB_URL: mongodb://admin:qwerty@mongo:27017/
+  testapp:
+    container_name: testapp
+    image: naimss0/testapp:1.2
+    ports:
+      - "5050:5050"
+    environment:
+      - MONGO_URL=mongodb://admin:qwerty@mongo:27017
+    depends_on:
+      - mongo
 
 ```
 
@@ -86,7 +95,7 @@ The **Mongo Express dashboard** will appear.
 **Note:** On your first visit, you'll be asked to log in with default credentials:
 
 - **Username:** `admin`
-- **Password:** `qwerty`
+- **Password:** `pass`
 
 **Once logged in, create the following:**
 
@@ -124,7 +133,7 @@ CMD ["node", "server.js"]
 Then build your Docker image:
 
 ```bash
-docker build -t naimss0/testapp:1.0 .
+docker build -t your_dockerhub_username/testapp:1.0 .
 
 ```
 
@@ -138,7 +147,7 @@ docker login -u your_dockerhub_username
 Then push the image:
 
 ```bash
-docker push naimss0/testapp:1.0
+docker push your_dockerhub_username/testapp:1.0
 
 ```
 
@@ -149,7 +158,7 @@ docker push naimss0/testapp:1.0
 Now run your app using:
 
 ```bash
-docker run -p 5050:5050 naimss0/testapp:1.0
+docker run -p 5050:5050 your_dockerhub_username/testapp:1.0
 
 ```
 
