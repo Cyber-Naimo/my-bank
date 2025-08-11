@@ -215,6 +215,74 @@ docker compose -f ./docker-compose.yml down
 
 ---
 
+Here’s your GitHub README section for **Step 7: Monitoring and Logging** formatted clearly:
+
+---
+
+## Step 7: Monitoring and Logging
+
+### **1. Download and Setup Prometheus**
+
+1. [Download Prometheus for Windows](https://prometheus.io/download/).
+2. Extract the downloaded ZIP file.
+3. Copy the extracted **Prometheus** folder into `C:\`.
+
+---
+
+### **2. Configure Prometheus**
+
+1. Navigate to the **Prometheus** folder.
+2. Open the `prometheus.yml` file in a text editor.
+3. Add the following configuration under `scrape_configs`:
+
+```yaml
+scrape_configs:
+  - job_name: "nodejs_app"
+    static_configs:
+      - targets: ["localhost:5050"]
+        labels:
+          app: "nodejs"
+```
+
+4. Save the file.
+
+---
+
+### **3. Run Prometheus**
+
+* Open Command Prompt in the **Prometheus** folder.
+* Run:
+
+```bash
+prometheus.exe
+```
+
+---
+
+### **4. Verify Prometheus Targets**
+
+* Go to: [http://localhost:9090/targets](http://localhost:9090/targets)
+  Check if the connection between Prometheus and your Node.js app is established.
+
+---
+
+### **5. Check Node.js App Metrics**
+
+* Visit: [http://localhost:5050/metrics](http://localhost:5050/metrics)
+  You should see your app's metrics.
+
+---
+
+### **6. Access Grafana Dashboard**
+
+* Open: [http://localhost:3000/](http://localhost:3000/)
+  Use Grafana to visualize the metrics collected by Prometheus.
+
+
+
+
+
+
 ### Summary
 
 | Service | Port | Default Credentials |
